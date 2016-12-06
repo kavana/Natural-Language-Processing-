@@ -1,0 +1,148 @@
+import pickle
+import sys
+import os
+import math
+
+myData = []
+ham = {}
+spam = {}
+trainSpamFileCount = 0
+trainHamFileCount = 0
+hamWordCount = 0
+spamWordCount = 0
+distinctWords = 0
+finalAnswer = ""
+devSpamFileCount = 0
+devHamFileCount = 0
+predictedSpamFileCount = 0
+predictedHamFileCount = 0
+correctlyClassifiedSpamFileCount = 0
+correctlyClassifiedHamFileCount = 0
+
+def extractData():
+    global myData
+    global ham
+    global spam
+    global trainSpamFileCount
+    global trainHamFileCount
+    global hamWordCount
+    global spamWordCount
+    global distinctWords
+    myData = pickle.load(open("nbmodel.txt", "rb"))
+    #print(myData)
+    ham = myData[0]
+    spam = myData[1]
+    trainSpamFileCount = myData[2]
+    trainHamFileCount = myData[3]
+    spamWordCount = myData[4]
+    hamWordCount = myData[5]
+    distinctWords = myData[6]
+
+def probOfSpam():
+    return math.log(trainSpamFileCount/(trainSpamFileCount+trainHamFileCount))
+
+
+def probOfHam():
+    return math.log(trainHamFileCount/(trainSpamFileCount+trainHamFileCount))
+
+def probOfWordGivenSpam(word):
+    if word in spam:
+        return (spam.get(word)+1)/(spamWordCount+distinctWords)
+    else:
+        return 1/(spamWordCount+distinctWords)
+
+def probOfWordGivenHam(word):
+    if word in ham:
+        return (ham.get(word)+1)/(hamWordCount+distinctWords)
+    else:
+        return 1/(hamWordCount+distinctWords)
+
+
+
+def probOfSpamGivenMail(rootName, fileName):
+    probOfMessage = 0
+    fp = open(os.path.join(rootName, fileName), "r", encoding="latin")
+    for sentence in fp:
+        sentence = sentence.rstrip('\n')
+        words = sentence.split(" ")
+        for word in words:
+            probOfMessage += math.log(probOfWordGivenSpam(word))
+    return probOfMessage+probOfSpam()
+
+
+def probOfNotSpamGivenMail(rootName, fileName):
+    probOfMessage = 0
+    fp = open(os.path.join(rootName, fileName), "r", encoding="latin")
+    for sentence in fp:
+        sentence = sentence.rstrip('\n')
+        words = sentence.split(" ")
+        for word in words:
+            probOfMessage += math.log(probOfWordGivenHam(word))
+    return probOfMessage + probOfHam()
+
+
+def naiveBayes(nameOfDir):
+    global finalAnswer
+    global devHamFileCount
+    global devSpamFileCount
+    global predictedSpamFileCount
+    global predictedHamFileCount
+    global correctlyClassifiedHamFileCount
+    global correctlyClassifiedSpamFileCount
+    for root, dirs, files in os.walk(nameOfDir, topdown=True):
+        if os.path.basename(root) == 'ham' or os.path.basename(root) == 'spam':
+            for file in files:
+                if file.endswith('.txt'):
+                    probOfSpam = probOfSpamGivenMail(root, file)
+                    probOfNotSpam = probOfNotSpamGivenMail(root, file)
+                    if probOfSpam > probOfNotSpam:
+                        finalAnswer = finalAnswer+"spam "+os.path.join(root,file)+"\n"
+                        predictedSpamFileCount += 1
+                        if os.path.basename(root) == "spam":
+                            correctlyClassifiedSpamFileCount += 1
+                    elif probOfSpam < probOfNotSpam:
+                        finalAnswer = finalAnswer + "ham " +os.path.join(root,file)+ "\n"
+                        predictedHamFileCount += 1
+                        if os.path.basename(root) == "ham":
+                            correctlyClassifiedHamFileCount += 1
+                if os.path.basename(root) == "ham":
+                    devHamFileCount += 1
+                if os.path.basename(root) == "spam":
+                    devSpamFileCount += 1
+    #print(finalAnswer)
+    fp = open("nboutput.txt", "w")
+    fp.write(finalAnswer)
+    fp.close()
+
+
+def evaluateResult():
+    global devHamFileCount
+    global devSpamFileCount
+    global predictedSpamFileCount
+    global predictedHamFileCount
+    global correctlyClassifiedHamFileCount
+    global correctlyClassifiedSpamFileCount
+    hamPrecision = round(correctlyClassifiedHamFileCount/predictedHamFileCount, 2)
+    hamRecall = round(correctlyClassifiedHamFileCount/devHamFileCount, 2)
+    spamPrecision = round(correctlyClassifiedSpamFileCount/predictedSpamFileCount, 2)
+    spamRecall = round(correctlyClassifiedSpamFileCount/devSpamFileCount, 2)
+    hamF1Score = round((2*hamPrecision*hamRecall)/(hamPrecision+hamRecall), 2)
+    spamF1Score = round((2*spamPrecision*spamRecall)/(spamPrecision+spamRecall), 2)
+    print("Performance on the development data with the help of training data")
+    print("spam Precision: ", spamPrecision)
+    print("spam Recall: ", spamRecall)
+    print("spam F1 Score: ", spamF1Score)
+    print("ham Precision: ", hamPrecision)
+    print("ham Recall: ", hamRecall)
+    print("ham F1 Score: ", hamF1Score)
+
+
+if __name__ == "__main__":
+    if sys.argv.__len__() == 2:
+        directoryName = sys.argv[1]
+        extractData()
+        naiveBayes(directoryName)
+        evaluateResult()
+
+    else:
+        print("invalid number of arguments")
