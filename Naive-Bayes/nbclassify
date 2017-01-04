@@ -90,25 +90,24 @@ def naiveBayes(nameOfDir):
     global correctlyClassifiedHamFileCount
     global correctlyClassifiedSpamFileCount
     for root, dirs, files in os.walk(nameOfDir, topdown=True):
-        if os.path.basename(root) == 'ham' or os.path.basename(root) == 'spam':
-            for file in files:
-                if file.endswith('.txt'):
-                    probOfSpam = probOfSpamGivenMail(root, file)
-                    probOfNotSpam = probOfNotSpamGivenMail(root, file)
-                    if probOfSpam > probOfNotSpam:
-                        finalAnswer = finalAnswer+"spam "+os.path.join(root,file)+"\n"
-                        predictedSpamFileCount += 1
-                        if os.path.basename(root) == "spam":
-                            correctlyClassifiedSpamFileCount += 1
-                    elif probOfSpam < probOfNotSpam:
-                        finalAnswer = finalAnswer + "ham " +os.path.join(root,file)+ "\n"
-                        predictedHamFileCount += 1
-                        if os.path.basename(root) == "ham":
-                            correctlyClassifiedHamFileCount += 1
-                if os.path.basename(root) == "ham":
-                    devHamFileCount += 1
-                if os.path.basename(root) == "spam":
-                    devSpamFileCount += 1
+		for file in files:
+			if file.endswith('.txt'):
+				probOfSpam = probOfSpamGivenMail(root, file)
+				probOfNotSpam = probOfNotSpamGivenMail(root, file)
+				if probOfSpam > probOfNotSpam:
+					finalAnswer = finalAnswer+"spam "+os.path.join(root,file)+"\n"
+					predictedSpamFileCount += 1
+					if os.path.basename(root) == "spam":
+						correctlyClassifiedSpamFileCount += 1
+				elif probOfSpam < probOfNotSpam:
+					finalAnswer = finalAnswer + "ham " +os.path.join(root,file)+ "\n"
+					predictedHamFileCount += 1
+					if os.path.basename(root) == "ham":
+						correctlyClassifiedHamFileCount += 1
+			if os.path.basename(root) == "ham":
+				devHamFileCount += 1
+			if os.path.basename(root) == "spam":
+				devSpamFileCount += 1
     #print(finalAnswer)
     fp = open("nboutput.txt", "w")
     fp.write(finalAnswer)
