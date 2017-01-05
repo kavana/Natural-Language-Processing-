@@ -1,0 +1,31 @@
+Report
+Name: Kavana Samrthyam Krishna Murthy
+
+1. Performance on the development data with 100% of the training data
+1a. spam precision: 0.99
+1b. spam recall: 0.98
+1c. spam F1 score: 0.98
+1d. ham precision: 0.95
+1e. ham recall: 0.98
+1f. ham F1 score: 0.96
+
+2. Performance on the development data with 10% of the training data
+2a. spam precision: 0.99
+2b. spam recall: 0.94
+2c. spam F1 score: 0.96
+2d. ham precision:0.88
+2e. ham recall: 0.98
+2f. ham F1 score: 0.93
+
+3. Description of enhancement(s) I tried:
+Used stop words provided by Stanford. Any word from the training data which
+is similar in the stop words list will be ignored from vocabulary.
+
+4. Best performance results based on enhancements. Note that these could be 
+the same or worse than the standard implementation.
+4a. spam precision: 0.98
+4b. spam recall: 0.99
+4c. spam F1 score: 0.98
+4d. ham precision: 0.96
+4e. ham recall: 0.94
+4f. ham F1 score:0.95

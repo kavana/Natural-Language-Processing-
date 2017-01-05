@@ -1,0 +1,44 @@
+Report
+
+Name:Kavana Samrthyam Krishna Murthy
+
+Part I.
+
+1. Performance of standard perceptron on the development data with 100% of the training data
+1a. spam precision: 0.99
+1b. spam recall: 0.98
+1c. spam F1 score: 0.98
+1d. ham precision: 0.95
+1e. ham recall: 0.98
+1f. ham F1 score: 0.96
+
+2. Performance of averaged perceptron on the development data with 100% of the training data
+2a. spam precision:0.98
+2b. spam recall: 0.98
+2c. spam F1 score: 0.98
+2d. ham precision: 0.96
+2e. ham recall: 0.96
+2f. ham F1 score: 0.96
+
+Part II.
+
+3. Performance of standard perceptron on the development data with 10% of the training data
+3a. spam precision: 0.98
+3b. spam recall: 0.92
+3c. spam F1 score: 0.95
+3d. ham precision: 0.94
+3e. ham recall: 0.95
+3f. ham F1 score: 0.89
+
+4. Performance of averaged perceptron on the development data with 10% of the training data
+4a. spam precision: 0.98
+4b. spam recall: 0.91
+4c. spam F1 score: 0.94
+4d. ham precision: 0.81
+4e. ham recall: 0.96
+4f. ham F1 score: 0.88
+
+5. Calculation of  precision, recall and F1 score? 
+I have included evaluation functionality in per_classify.py. The function is called evaluateResult(); 
+The parameters predicted file count, correctly classified file count , and total file count is calculated while the classifying
+the data itself. 

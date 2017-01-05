@@ -1,0 +1,18 @@
+Report
+
+Name:Kavana Samrthyam Krishna Murthy
+
+Evaluation of baseline and advanced features
+(correctly predicted) /(total correct) *100
+
+Advanced feature set.
+Converted tokens to lower case.
+Checked if the sentence is a question.
+Checked if the sentence has an exclamation.
+bigrams of the each sentence in the conversation
+
+Alternate advanced feature sets
+Tried stop words. 
+
+Accuracy of baseline features was:71.44
+Accuracy of advanced features was:72.42
